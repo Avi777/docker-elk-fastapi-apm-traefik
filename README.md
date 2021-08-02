@@ -45,3 +45,9 @@ boom http://localhost:8000/ -c 100 -d 10
 
 boom http://localhost:8000/health -c 10 -n 100 
 ```
+
+
+## References
+
+[1] [deviantony/docker-elk](https://github.com/deviantony/docker-elk)
+[2] [elasticsearch-py/examples/fastapi-apm](https://github.com/elastic/elasticsearch-py/tree/master/examples/fastapi-apm)
