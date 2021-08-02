@@ -1,0 +1,2 @@
+elastic-apm==6.3.3
+python-logstash-async==2.3.0

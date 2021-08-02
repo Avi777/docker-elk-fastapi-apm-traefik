@@ -1,0 +1,42 @@
+services:
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.13.4
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+      - 8200:8200
+    networks:
+      - apm
+    command: >
+      apm-server -e
+        -E apm-server.rum.enabled=true
+        -E setup.kibana.host="http://35.84.146.99:8000/"
+        -E setup.template.settings.index.number_of_replicas=0
+        -E apm-server.kibana.enabled=true
+        -E apm-server.kibana.host="http://35.84.146.99:8000/"
+        -E apm-server.kibana.username="elastic"
+        -E apm-server.kibana.password="changeme"
+        -E output.elasticsearch.hosts=["http://35.84.146.99/"]
+        -E output.elasticsearch.username="elastic"
+        -E output.elasticsearch.password="changeme"
+    healthcheck:
+      interval: 20s
+      retries: 10
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+
+  fastapi:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8000
+      LOG_LEVEL: "DEBUG"
+    ports:
+      - 8000:8000
+    restart: always
+    networks:
+      - apm
+
+networks:
+  apm:
+    driver: bridge
