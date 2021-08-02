@@ -14,7 +14,7 @@
 http:
   routers:
     es-router:
-      rule: "Host(`es.exaple.com`)"
+      rule: "Host(`es.example.com`)"
       entryPoints: es
       service: elasticsearch
     # add tls middleware
