@@ -1,0 +1,49 @@
+log:
+  level: DEBUG
+
+entryPoints:
+  es:
+    address: ":80"
+
+  es-secure:
+    address: ":443"
+  
+  kibana:
+    address: ":8000"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "analytics@fusemachines.com"
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: es
+
+
+http:
+  routers:
+    es-router:
+      rule: "Host(`35.84.146.99`)"
+      entryPoints: es
+      service: elasticsearch
+     
+    kibana-router:
+      rule: "Host(`35.84.146.99`)"
+      entryPoints: kibana 
+      service: kibana
+
+  services:
+    elasticsearch:
+      loadBalancer:
+        servers:
+          - url: http://elasticsearch:9200
+    kibana:
+      loadBalancer:
+        servers:
+          - url: http://kibana:5601
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true
+    
